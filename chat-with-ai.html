@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <style>
+        body {
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        #chat-container {
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            max-width: 500px;
+            margin: auto;
+            height: 400px;
+            overflow-y: auto;
+            background-color: #222;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #007bff;
+            align-self: flex-end;
+        }
+        .ai-message {
+            background-color: #444;
+            align-self: flex-start;
+        }
+        #input-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        #input-message {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+        }
+        button {
+            width: 15%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with AI</h1>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="input-message" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+
+        function sendMessage() {
+            const inputMessage = document.getElementById('input-message');
+            const message = inputMessage.value;
+
+            if (message.trim() === '') return;
+
+            // Display user message
+            displayMessage(message, 'user');
+
+            // Clear input
+            inputMessage.value = '';
+
+            // Here, we simulate the AI's response as if it's ChatGPT
+            setTimeout(() => {
+                const aiResponse = getChatGPTResponse(message);
+                displayMessage(aiResponse, 'ai');
+            }, 1000); // Simulated delay
+        }
+
+        function displayMessage(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message ' + (sender === 'user' ? 'user-message' : 'ai-message');
+            messageElement.textContent = message;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
+        }
+
+        function getChatGPTResponse(userMessage) {
+            // Simulate responses as if coming from ChatGPT
+            return `You asked: "${userMessage}". I'm here to help you with that!`;
+            // For real integration, you'd connect to the OpenAI API to get dynamic responses
+        }
+    </script>
+</body>
+</html>

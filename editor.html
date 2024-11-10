@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Coding Editor</title>
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body Styling */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Page Title */
+        h1 {
+            margin-bottom: 20px;
+            color: #0d6efd;
+        }
+
+        /* Editor Container */
+        .editor-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-radius: 8px;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        select {
+            padding: 8px;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+
+        /* Code Editor */
+        #code-editor {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            padding: 15px;
+            height: 300px;
+            width: 100%;
+            resize: vertical;
+            font-family: monospace;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        /* Run Button */
+        .run-btn {
+            padding: 10px 20px;
+            background-color: #198754;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .run-btn:hover {
+            background-color: #157347;
+        }
+
+        /* Task Management Section */
+        .task-management {
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        /* Task Input Fields */
+        .task-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .task-input input,
+        .task-input select {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            outline: none;
+        }
+
+        /* Task List */
+        .task-list {
+            margin-top: 10px;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Output Area */
+        .output-container {
+            background-color: #333;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            border-radius: 5px;
+            color: #ddd;
+            font-family: monospace;
+        }
+
+        /* Terminal Output */
+        .terminal {
+            margin-top: 15px;
+            background-color: #1c1c1c;
+            padding: 10px;
+            height: 150px;
+            overflow-y: auto;
+            border-radius: 5px;
+            color: #00ff00;
+            font-family: monospace;
+        }
+
+        /* Save Project Button */
+        .save-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Coding Editor</h1>
+
+    <div class="editor-container">
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <label for="language-select">Select Language:</label>
+            <select id="language-select">
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+            </select>
+        </div>
+
+        <!-- Code Editor -->
+        <textarea id="code-editor" placeholder="Write your code here..."></textarea>
+
+        <!-- Run Button -->
+        <button class="run-btn" onclick="runCode()">Run Code</button>
+
+        <!-- Save Project Button -->
+        <button class="save-btn" onclick="saveProject()">Save Project</button>
+
+        <!-- Output Area -->
+        <h2>Output</h2>
+        <iframe id="output-iframe" class="output-container"></iframe>
+
+        <!-- Terminal Output -->
+        <h2>Terminal</h2>
+        <div id="terminal-output" class="terminal">Console Output:</div>
+
+        <!-- Task Management Section -->
+        <div class="task-management">
+            <h2>Task Management</h2>
+            <div class="task-input">
+                <input type="text" id="task-name" placeholder="Task Name" />
+                <input type="date" id="due-date" />
+                <select id="priority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <button onclick="addTask()">Add Task</button>
+            </div>
+            <div class="task-list" id="task-list">No tasks added.</div>
+        </div>
+    </div>
+
+    <script>
+        // Function to run the code
+        function runCode() {
+            const code = document.getElementById('code-editor').value;
+            const language = document.getElementById('language-select').value;
+            const outputIframe = document.getElementById('output-iframe');
+            const terminalOutput = document.getElementById('terminal-output');
+
+            // Clear previous output and terminal messages
+            outputIframe.srcdoc = "";
+            terminalOutput.textContent = "Console Output:";
+
+            if (language === 'html') {
+                outputIframe.srcdoc = code;
+            } else if (language === 'css') {
+                outputIframe.srcdoc = `<style>${code}</style>`;
+            } else if (language === 'javascript') {
+                outputIframe.srcdoc = `<script>${code}<\/script>`;
+            } else if (language === 'python') {
+                terminalOutput.textContent += "\nPython execution is simulated here.";
+                terminalOutput.textContent += `\nCode entered: ${code}`;
+            } else {
+                terminalOutput.textContent += "\nUnsupported language!";
+            }
+        }
+
+        // Save the current project
+        function saveProject() {
+            const projectName = prompt("Enter project name:");
+            const code = document.getElementById('code-editor').value;
+            const language = document.getElementById('language-select').value;
+
+            if (projectName) {
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                projects.push({ name: projectName, code, language });
+                localStorage.setItem('projects', JSON.stringify(projects));
+                alert("Project saved!");
+            }
+        }
+
+        // Task Management
+        function addTask() {
+            const taskName = document.getElementById('task-name').value;
+            const dueDate = document.getElementById('due-date').value;
+            const priority = document.getElementById('priority').value;
+            const taskList = document.getElementById('task-list');
+
+            if (taskName === "") {
+                alert("Please enter a task name.");
+                return;
+            }
+
+            const taskItem = document.createElement('div');
+            taskItem.textContent = `${taskName} (Due: ${dueDate}, Priority: ${priority})`;
+            taskList.appendChild(taskItem);
+
+            // Save tasks to local storage
+            saveTasks();
+            clearInputFields();
+        }
+
+        // Save tasks to local storage
+        function saveTasks() {
+            const taskList = document.getElementById('task-list');
+            const tasks = Array.from(taskList.children).map(task => task.textContent);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Clear input fields after adding a task
+        function clearInputFields() {
+            document.getElementById('task-name').value = '';
+            document.getElementById('due-date').value = '';
+            document.getElementById('priority').value = 'low';
+        }
+
+        // Load tasks from local storage
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const taskList = document.getElementById('task-list');
+            tasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.textContent = task;
+                taskList.appendChild(taskItem);
+            });
+        }
+
+        // Load tasks when the page is loaded
+        window.onload = loadTasks;
+
+        // Load the selected project when the page is loaded
+function loadSelectedProject() {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+
+    if (selectedProject) {
+        document.getElementById('code-editor').value = selectedProject.code;
+        document.getElementById('language-select').value = selectedProject.language;
+        localStorage.removeItem('selectedProject'); // Clear the item after loading
+    }
+}
+
+    // Load selected project when the page is loaded
+    window.onload = function() {
+    loadTasks();  // Existing task loading
+    loadSelectedProject(); // Load project data
+};
+    </script>
+</body>
+</html>

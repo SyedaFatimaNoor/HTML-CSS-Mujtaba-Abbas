@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #0d6efd;
+        }
+        .project-list {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 600px;
+            margin: auto;
+            margin-top: 20px;
+        }
+        .project-item {
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .load-btn {
+            background-color: #198754;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .load-btn:hover {
+            background-color: #157347;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Projects</h1>
+    <div class="project-list" id="project-list">
+        <p>No projects saved.</p>
+    </div>
+
+    <script>
+        // Load projects from local storage
+        function loadProjects() {
+            const projects = JSON.parse(localStorage.getItem('projects')) || [];
+            const projectList = document.getElementById('project-list');
+
+            if (projects.length === 0) {
+                projectList.innerHTML = "<p>No projects saved.</p>";
+                return;
+            }
+
+            projectList.innerHTML = ""; // Clear previous projects
+
+            projects.forEach((project, index) => {
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item';
+                projectItem.innerHTML = `
+                    <span>${project.name} (${project.language})</span>
+                    <button class="load-btn" onclick="loadProject(${index})">Load</button>
+                `;
+                projectList.appendChild(projectItem);
+            });
+        }
+
+        // Load a specific project into the editor
+        function loadProject(index) {
+            const projects = JSON.parse(localStorage.getItem('projects'));
+            const selectedProject = projects[index];
+
+            // Redirect to editor.html and pass the project data via local storage
+            localStorage.setItem('selectedProject', JSON.stringify(selectedProject));
+            window.location.href = "editor.html";
+        }
+
+        // Load projects when the page is loaded
+        window.onload = loadProjects;
+    </script>
+</body>
+</html>
